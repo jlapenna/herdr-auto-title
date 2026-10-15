@@ -127,9 +127,9 @@ type Options struct {
 	// way round so that the zero value keeps the name, which is what a resolver
 	// built without options wants.
 	HideAgentName bool
-	// HideContext leaves the directory and branch out of a title that has an
-	// activity, so it reads as what the pane is doing and nothing else. A
-	// title with no activity keeps them, since they are then all it has.
+	// HideContext leaves the directory and branch out of every title, so it
+	// reads as what the pane is doing and nothing else. A pane doing nothing
+	// nameable falls back to the generic name, never to its directory.
 	HideContext bool
 	// Home is the user's home directory, which names no project.
 	Home string
@@ -262,7 +262,7 @@ func (d *Deterministic) collect(pane *state.PaneState) collected {
 		found.parts.Agent = ""
 	}
 
-	if d.hideContext && found.parts.Activity != "" {
+	if d.hideContext {
 		found.parts.Context = ""
 		found.parts.Branch = ""
 	}

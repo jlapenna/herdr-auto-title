@@ -72,9 +72,10 @@ type Config struct {
 	// what it is working on. Turned off, a pane whose agent has said nothing
 	// is named like any other pane in that directory.
 	ShowAgentName bool
-	// ShowContext puts the directory and branch in front of what a pane is
-	// doing. Turned off, they appear only when there is nothing else to show.
-	ShowContext bool
+	// HideContext leaves the directory and branch out of every title; a pane
+	// doing nothing nameable gets the generic name instead. Stated this way
+	// round so the zero value keeps them, as upstream titles do.
+	HideContext bool
 	// RenamePanes names each pane as well as its tab, which is what Herdr's
 	// goto panel lists a pane by. It costs a read per pane rather than per
 	// tab — see docs/architecture/poll-loop.md.
@@ -125,7 +126,6 @@ func LoadConfig() (Config, []string) {
 		MaxLength:        resolver.DefaultMaxLength,
 		BranchMax:        resolver.DefaultBranchMaxLength,
 		ShowPosition:     true,
-		ShowContext:      true,
 		ManualPath:       ownPath(manualFile),
 		ReadTranscripts:  true,
 		RenamePanes:      true,
@@ -144,7 +144,7 @@ func LoadConfig() (Config, []string) {
 	cfg.ShowPosition = fromEnv(&warnings, EnvPosition, cfg.ShowPosition, boolean)
 	cfg.ReadTranscripts = fromEnv(&warnings, EnvTranscript, cfg.ReadTranscripts, boolean)
 	cfg.ShowAgentName = fromEnv(&warnings, EnvAgentName, cfg.ShowAgentName, boolean)
-	cfg.ShowContext = fromEnv(&warnings, EnvContext, cfg.ShowContext, boolean)
+	cfg.HideContext = !fromEnv(&warnings, EnvContext, !cfg.HideContext, boolean)
 	cfg.RenamePanes = fromEnv(&warnings, EnvPanes, cfg.RenamePanes, boolean)
 	cfg.PreferAgentPane = fromEnv(&warnings, EnvPreferAgent, cfg.PreferAgentPane, boolean)
 	cfg.ShowPaneID = fromEnv(&warnings, EnvPaneID, cfg.ShowPaneID, boolean)

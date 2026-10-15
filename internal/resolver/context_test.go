@@ -31,12 +31,12 @@ func TestAHiddenContextLeavesOnlyTheWork(t *testing.T) {
 	}
 }
 
-func TestAHiddenContextKeepsTheDirectoryWhenItIsAllThereIs(t *testing.T) {
+func TestAHiddenContextNeverFallsBackToTheDirectory(t *testing.T) {
 	t.Parallel()
 
 	got := hiddenContextChain().Resolve(tabWithPane(&state.PaneState{Dir: dashboard}))
 
-	if want := "dashboard"; got.Name != want {
+	if want := "Shell"; got.Name != want {
 		t.Errorf("name = %q, want %q", got.Name, want)
 	}
 }
